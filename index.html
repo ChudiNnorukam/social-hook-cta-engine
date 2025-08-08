@@ -34,8 +34,16 @@
 <body>
   <div class="container">
     <div class="card" style="margin-bottom:12px">
-      <h1>Social Hook + CTA Engine — Free</h1>
-      <p class="lead">Topic + persona + platform → 10 hooks, 3 CTAs, 15 hashtags. Offline, private, instant.</p>
+      <div class="actions" style="justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="margin:0">Social Hook + CTA Engine — Free</h1>
+          <p class="lead" style="margin:2px 0 0">Topic + persona + platform → 10 hooks, 3 CTAs, 15 hashtags. Offline, private, instant.</p>
+        </div>
+        <div>
+          <a id="bannerTally" class="pill" href="#" target="_blank" rel="noopener">Get updates</a>
+          <a id="bannerGumroad" class="pill" href="#" target="_blank" rel="noopener">Try sample ZIP</a>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -137,6 +145,12 @@
   </div>
 
   <script>
+    // Configurable links (replace once you have them)
+    const LINKS = {
+      TALLY: 'https://tally.so/r/your-form-id',
+      GUMROAD: 'https://gumroad.com/l/your-product-id'
+    };
+
     const presets = [
       { name: 'Creators • Instagram', v: { topic: 'repurposing long‑form into Reels', persona: 'creator', platform: 'instagram', tone: 'bold' } },
       { name: 'Coaches • LinkedIn', v: { topic: 'high‑ticket webinar funnel outline', persona: 'coach', platform: 'linkedin', tone: 'analytical' } },
@@ -340,8 +354,14 @@
       generateAll();
 
       // replace links
-      document.getElementById('tallyLink').href = 'https://tally.so/r/your-form-id';
-      document.getElementById('gumroadLink').href = 'https://gumroad.com/l/your-product-id';
+      document.getElementById('tallyLink').href = LINKS.TALLY;
+      document.getElementById('gumroadLink').href = LINKS.GUMROAD;
+      document.getElementById('bannerTally').href = LINKS.TALLY;
+      // banner gumroad points to sample zip for trust; swap to GUMROAD after launch
+      const sampleZip = 'sample-pro-pack.zip';
+      const bannerG = document.getElementById('bannerGumroad');
+      bannerG.href = sampleZip;
+      bannerG.setAttribute('download', 'sample-pro-pack.zip');
     }
 
     document.addEventListener('DOMContentLoaded', hydrate);
