@@ -358,6 +358,31 @@
         // ignore
       }
     })();
+
+    // Download sample pack (.txt)
+    (function(){
+      async function downloadSample() {
+        try {
+          const files = [
+            'pro-pack/guide.md',
+            'pro-pack/hooks_real_estate.csv',
+            'pro-pack/ctas_platform.csv',
+            'pro-pack/hashtags_real_estate.csv'
+          ];
+          const parts = await Promise.all(files.map(f => fetch(f, {cache:'no-store'}).then(r => r.ok ? r.text() : `# Missing: ${f}`)));
+          const combined = parts.map((t,i)=>`=== ${files[i]} ===\n${t}\n`).join('\n');
+          const blob = new Blob([combined], {type:'text/plain'});
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'social-hook-cta-engine-sample-pack.txt';
+          a.click();
+          URL.revokeObjectURL(a.href);
+        } catch (e) {}
+      }
+      document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'downloadSample') downloadSample();
+      }, true);
+    })();
   </script>
 </body>
 </html>
