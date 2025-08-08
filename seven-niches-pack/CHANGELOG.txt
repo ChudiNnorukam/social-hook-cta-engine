@@ -1,0 +1,5 @@
+Changelog — Seven Niches Pack
+
+1.0.0 (2025-08-08)
+- Initial release with 7 niches
+- Included descriptions, strategies, sample calendars, resources, and a thank-you page
