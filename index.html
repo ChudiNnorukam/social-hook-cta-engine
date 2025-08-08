@@ -40,8 +40,8 @@
           <p class="lead" style="margin:2px 0 0">Topic + persona + platform → 10 hooks, 3 CTAs, 15 hashtags. Offline, private, instant.</p>
         </div>
         <div>
-          <a id="bannerTally" class="pill" href="#" target="_blank" rel="noopener">Get updates</a>
-          <a id="bannerGumroad" class="pill" href="#" target="_blank" rel="noopener">Try sample ZIP</a>
+          <a id="bannerTally" class="pill" href="#" target="_blank" rel="noopener">Get updates (1‑click prefill)</a>
+          <a id="bannerGumroad" class="pill" href="#" target="_blank" rel="noopener">Get Pro Pack ($9)</a>
         </div>
       </div>
     </div>
@@ -150,6 +150,45 @@
       TALLY: 'https://tally.so/r/wL2o2v',
       GUMROAD: 'https://7124296224445.gumroad.com/l/jxvexe'
     };
+
+    function buildUtm(baseUrl, params) {
+      try {
+        const url = new URL(baseUrl);
+        Object.entries(params).forEach(([k,v]) => v && url.searchParams.set(k, v));
+        return url.toString();
+      } catch { return baseUrl; }
+    }
+
+    function currentContext() {
+      const persona = (document.getElementById('persona')?.value || 'creator');
+      const platform = (document.getElementById('platform')?.value || 'instagram');
+      const topic = (document.getElementById('topic')?.value || '').trim();
+      return { persona, platform, topic };
+    }
+
+    function utmParams(kind) {
+      const { persona, platform } = currentContext();
+      return {
+        utm_source: 'site',
+        utm_medium: 'cta',
+        utm_campaign: 'social-hook-pro',
+        utm_content: `${kind}-${platform}-${persona}`.toLowerCase().replace(/[^a-z0-9-]/g,'-')
+      };
+    }
+
+    function buildTallyUrl(kind) {
+      const { persona, platform, topic } = currentContext();
+      const url = new URL(LINKS.TALLY);
+      if (persona) url.searchParams.set('persona', persona);
+      if (platform) url.searchParams.set('platform', platform);
+      if (topic) url.searchParams.set('topic', topic);
+      Object.entries(utmParams(kind)).forEach(([k,v]) => url.searchParams.set(k, v));
+      return url.toString();
+    }
+
+    function buildGumroadUrl(kind) {
+      return buildUtm(LINKS.GUMROAD, utmParams(kind));
+    }
 
     const presets = [
       { name: 'Creators • Instagram', v: { topic: 'repurposing long‑form into Reels', persona: 'creator', platform: 'instagram', tone: 'bold' } },
@@ -354,14 +393,14 @@
       generateAll();
 
       // replace links
-      document.getElementById('tallyLink').href = LINKS.TALLY;
-      document.getElementById('gumroadLink').href = LINKS.GUMROAD;
-      document.getElementById('bannerTally').href = LINKS.TALLY;
-      // banner gumroad points to sample zip for trust; swap to GUMROAD after launch
-      const sampleZip = 'sample-pro-pack.zip';
+      document.getElementById('tallyLink').href = buildTallyUrl('footer');
+      document.getElementById('gumroadLink').href = buildGumroadUrl('footer');
+
+      const bannerT = document.getElementById('bannerTally');
+      bannerT.href = buildTallyUrl('banner');
+
       const bannerG = document.getElementById('bannerGumroad');
-      bannerG.href = sampleZip;
-      bannerG.setAttribute('download', 'sample-pro-pack.zip');
+      bannerG.href = buildGumroadUrl('banner');
     }
 
     document.addEventListener('DOMContentLoaded', hydrate);
