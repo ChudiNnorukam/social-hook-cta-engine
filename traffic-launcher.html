@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Traffic Launcher — Free</title>
+<style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#0b0f1a;color:#e6e9ef;margin:0} .wrap{max-width:960px;margin:32px auto;padding:20px} .card{border:1px solid #223055;border-radius:12px;padding:16px;background:#111727} label{font-weight:600;font-size:13px;color:#cbd5e1} input,select,textarea{width:100%;padding:10px;border:1px solid #223055;border-radius:10px;background:#0e1426;color:#e6e9ef} .grid{display:grid;gap:12px} @media(min-width:860px){.two{grid-template-columns:1fr 1fr}} .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px} button{border:1px solid #223055;background:#111a31;color:#e6e9ef;padding:10px 14px;border-radius:10px;cursor:pointer} .mono{font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap;background:#0b1327;border:1px dashed #2a3a6b;border-radius:12px;padding:12px}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" style="margin-bottom:12px">
+    <h1 style="margin:0 0 6px">Traffic Launcher — Free</h1>
+    <p style="margin:0">Generate platform‑ready posts, CSV schedules, and community search queries (static, no login required).</p>
+  </div>
+  <div class="card">
+    <div class="grid two">
+      <div>
+        <label for="product">Product</label>
+        <input id="product" value="Social Hook + CTA Engine" />
+      </div>
+      <div>
+        <label for="url">URL</label>
+        <input id="url" value="https://social-hook-cta-engine.pages.dev/index.html" />
+      </div>
+      <div>
+        <label for="niche">Niche</label>
+        <select id="niche">
+          <option>E-commerce</option><option>Health & Wellness</option><option>Real Estate</option><option>Fashion & Beauty</option><option>Food & Beverage</option><option>Travel & Hospitality</option><option>Financial Services</option>
+        </select>
+      </div>
+      <div>
+        <label for="platforms">Platforms</label>
+        <select id="platforms" multiple>
+          <option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>X</option><option>YouTube</option>
+        </select>
+      </div>
+      <div>
+        <label for="campaign">UTM Campaign</label>
+        <input id="campaign" value="week1" />
+      </div>
+      <div>
+        <label for="variant">UTM Content Variant</label>
+        <select id="variant">
+          <option>variant-a</option>
+          <option>variant-b</option>
+          <option>variant-c</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="gen">Generate</button>
+      <button id="csv">Download CSV schedule</button>
+      <button id="queries">Download community queries (.txt)</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin:0 0 6px">Posts (preview)</h3>
+    <div id="out" class="mono">—</div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin:0 0 6px">Reusable Copy (edit per niche/platform)</h3>
+    <div id="reusable" class="mono">—</div>
+    <div class="actions"><button id="copyReusable">Copy Reusable Copy</button></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin:0 0 6px">Anti‑spam Guardrails</h3>
+    <div class="mono">1 post per community per week; vary copy; lead with value (not links). Keep DMs closed; include opt‑out line in cold replies. Answer comments same day to build trust. Schedule 1–2 posts per channel for the week (text‑only). Standard UTM: utm_source=channel, utm_medium=post, utm_campaign=week1, utm_content=variant-a/b/c.</div>
+  </div>
+</div>
+<script>
+function getSel(id){return document.getElementById(id)}
+function getMulti(id){return Array.from(getSel(id).selectedOptions).map(o=>o.value)}
+function utm(url, source, medium, campaign, content){ try{const u=new URL(url); u.searchParams.set('utm_source',source); u.searchParams.set('utm_medium',medium); u.searchParams.set('utm_campaign',campaign); if(content) u.searchParams.set('utm_content',content); return u.toString();}catch{return url}}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+const ctas={Instagram:["Comment 'LINK' for the checklist","DM 'GUIDE' for templates","Free version in bio"],TikTok:["Comment 'LINK' to get the file","Follow for part 2","Free copy in bio"],LinkedIn:["Reply LINK for the toolkit","Connect + comment GUIDE for the PDF","Free resource in my featured"],X:["Reply LINK for the swipe","RT + DM GUIDE for the pack","Free link in bio"],YouTube:["Comment LINK for the sheet","Subscribe + DM GUIDE on IG","Free link in description"]}
+const hooks=["Stop scrolling: {benefit} in {time}","{num} tips for {topic}","You're wasting time on {topic} — do this instead","Case study: {outcome} in {time}"]
+const times=['7 days','14 days','30 days']
+const numbers=[3,5,7,10]
+function derive(topic){return{benefit:`get results with ${topic}`,outcome:`win at ${topic}`,time:pick(times),num:pick(numbers)}}
+function fill(t,v){return t.replace(/\{(\w+)\}/g,(_,k)=>v[k]||'')}
+function gen(){
+  const product=getSel('product').value.trim();
+  const url=getSel('url').value.trim();
+  const niche=getSel('niche').value;
+  const plats=getMulti('platforms');
+  const topic=`${product} for ${niche.toLowerCase()}`;
+  const v=derive(topic);
+  const posts=[];
+  const campaign=getSel('campaign').value.trim()||'week1';
+  const variant=getSel('variant').value||'variant-a';
+  plats.forEach(p=>{
+    const h=fill(pick(hooks),v);
+    const link=utm(url,p.toLowerCase(),'post',campaign,variant);
+    const c=pick(ctas[p]||ctas.Instagram);
+    posts.push(`[${p}] ${h}\n${c}\n${link}`);
+  })
+  getSel('out').textContent=posts.join('\n\n');
+  return {posts}
+}
+function downloadCsv(){
+  const {posts}=gen();
+  const rows=['platform,post'];
+  posts.forEach(p=>{
+    const platform=p.match(/^\[(.*?)\]/)?.[1]||''; const body=p.replace(/^\[.*?\]\s*/,'');
+    rows.push(`${platform},"${body.replace(/"/g,'""')}"`);
+  })
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='schedule.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+function downloadQueries(){
+  const product=getSel('product').value.trim();
+  const niche=getSel('niche').value;
+  const terms=[
+    `${niche} facebook groups rules`,
+    `${niche} reddit communities posting guidelines`,
+    `${niche} discord server list marketing`,
+    `${niche} forums share your project`,
+    `${niche} newsletter submission`,
+  ];
+  const blob=new Blob([terms.join('\n')],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='community-queries.txt'; a.click(); URL.revokeObjectURL(a.href);
+}
+function renderReusable(){
+  const tool='https://social-hook-cta-engine.pages.dev/';
+  const gum='https://7124296224445.gumroad.com/l/jxvexe';
+  const tally='https://tally.so/r/wL2o2v';
+  const copy = [
+    'Hook: “Stop guessing hooks. Use this simple 3-step prompt map to write 10 in 5 minutes.”',
+    'Body: “Pick niche → choose platform → paste to free tool. It outputs 10 hooks, 3 CTAs, 15 hashtags. Then refine 1 and publish.”',
+    'CTA: “Grab the free tool; $9 Seven Niches pack if you want ready-made guides.”',
+    `Links: Tool: ${tool}  Gumroad: ${gum}  Tally: ${tally}`
+  ].join('\n');
+  getSel('reusable').textContent = copy;
+}
+getSel('gen').addEventListener('click',()=>{gen(); renderReusable();}); getSel('csv').addEventListener('click',downloadCsv); getSel('queries').addEventListener('click',downloadQueries); getSel('copyReusable').addEventListener('click',()=>{navigator.clipboard.writeText(getSel('reusable').textContent.trim())});
+</script>
+</body></html>
