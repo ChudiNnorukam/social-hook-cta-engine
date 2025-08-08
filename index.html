@@ -131,6 +131,9 @@
       </ol>
       <span class="subtle">All offline in your browser. No tracking.</span>
     </div>
+    <div class="card" style="margin-top:12px; text-align:center">
+      <span id="versionText">v0.0.0</span> • <a href="CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+    </div>
   </div>
 
   <script>
@@ -342,6 +345,19 @@
     }
 
     document.addEventListener('DOMContentLoaded', hydrate);
+
+    // Version footer (best-effort, static hosting friendly)
+    (async () => {
+      try {
+        const res = await fetch('VERSION', { cache: 'no-store' });
+        if (res.ok) {
+          const v = (await res.text()).trim();
+          if (v) document.getElementById('versionText').textContent = `v${v}`;
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
   </script>
 </body>
 </html>
