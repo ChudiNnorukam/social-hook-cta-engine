@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Social Hook + CTA Engine — Free</title>
+  <meta name="description" content="Generate 10 hooks, 3 CTAs, and 15 hashtags for Instagram, TikTok, LinkedIn, X, and YouTube Shorts. No login, zero backend." />
+  <style>
+    :root {
+      --bg: #0b0f1a; --panel: #111727; --text: #e6e9ef; --muted: #a0aec0; --border: #223055; --accent: #93c5fd;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(1200px 800px at 10% 0%,#0f172a 0%,#0b0f1a 45%,#091120 100%);color:var(--text)}
+    .container{max-width:980px;margin:32px auto 80px;padding:20px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border:1px solid var(--border);border-radius:14px;padding:18px;backdrop-filter:blur(6px)}
+    h1{margin:0 0 6px;font-size:28px}
+    p.lead{margin:0 0 12px;color:var(--muted)}
+    .grid{display:grid;gap:12px}
+    @media(min-width:860px){.two{grid-template-columns:1fr 1fr}}
+    label{font-weight:600;font-size:13px;color:#cbd5e1}
+    input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#0e1426;color:var(--text);outline:none}
+    input:focus,select:focus,textarea:focus{border-color:#3353a6;box-shadow:0 0 0 3px rgba(51,83,166,.25)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    button{border:1px solid var(--border);background:#111a31;color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer}
+    button.primary{background:linear-gradient(135deg,#22d3ee,#3b82f6);border:0;color:#071422;font-weight:700}
+    .pill{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0d162b;cursor:pointer}
+    .output{background:#0b1327;border:1px dashed #2a3a6b;border-radius:12px;padding:12px;font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap}
+    .subtle{color:var(--muted);font-size:12px}
+    a{color:#93c5fd;text-decoration:none}
+    a:hover{text-decoration:underline}
+    ol,ul{margin:0;padding-left:18px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" style="margin-bottom:12px">
+      <h1>Social Hook + CTA Engine — Free</h1>
+      <p class="lead">Topic + persona + platform → 10 hooks, 3 CTAs, 15 hashtags. Offline, private, instant.</p>
+    </div>
+
+    <div class="card">
+      <div class="grid two">
+        <div>
+          <label for="topic">Topic</label>
+          <input id="topic" placeholder="e.g., AI content batching for real estate" />
+        </div>
+        <div>
+          <label for="persona">Persona</label>
+          <select id="persona">
+            <option value="creator">Creator</option>
+            <option value="coach">Coach</option>
+            <option value="service">Service Provider</option>
+            <option value="freelancer">Freelancer</option>
+            <option value="local">Local Business</option>
+          </select>
+        </div>
+        <div>
+          <label for="platform">Platform</label>
+          <select id="platform">
+            <option value="instagram">Instagram</option>
+            <option value="tiktok">TikTok</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="twitter">X (Twitter)</option>
+            <option value="youtube">YouTube Shorts</option>
+          </select>
+        </div>
+        <div>
+          <label for="tone">Tone</label>
+          <select id="tone">
+            <option value="bold">Bold</option>
+            <option value="friendly">Friendly</option>
+            <option value="analytical">Analytical</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="genBtn">Generate</button>
+        <button id="copyAllBtn">Copy All</button>
+        <button id="downloadBtn">Download .txt</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="grid two">
+        <div>
+          <h3 style="margin:0 0 6px">Hooks (10)</h3>
+          <div class="output" id="hooks">—</div>
+          <div class="actions"><button id="copyHooks">Copy Hooks</button></div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px">CTAs (3)</h3>
+          <div class="output" id="ctas">—</div>
+          <div class="actions"><button id="copyCtas">Copy CTAs</button></div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <h3 style="margin:0 0 6px">Hashtags (15)</h3>
+        <div class="output" id="hashtags">—</div>
+        <div class="actions"><button id="copyTags">Copy Hashtags</button></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="grid two">
+        <div>
+          <h3 style="margin:0 0 6px">Free Presets</h3>
+          <div class="actions" id="presetList"></div>
+          <span class="subtle">Click to load, then Generate.</span>
+        </div>
+        <div>
+          <div class="card" style="border-color:#2b3a66;background:linear-gradient(180deg,rgba(46,60,110,.2),rgba(17,24,39,.35))">
+            <h3 style="margin:0 0 6px">Pro Pack — $9</h3>
+            <p class="subtle" style="margin:0 0 6px">300 hooks by niche (fitness, real estate, dental, legal), CTA swipe file, hashtag banks.</p>
+            <div class="actions">
+              <a id="tallyLink" class="pill" href="#" target="_blank" rel="noopener">Get updates (Tally)</a>
+              <a id="gumroadLink" class="pill" href="#" target="_blank" rel="noopener">Buy Pro Pack</a>
+            </div>
+            <span class="subtle">Replace these with your real links.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin:0 0 8px">How to use</h3>
+      <ol style="color:#cbd5e1">
+        <li>Enter topic, pick persona and platform</li>
+        <li>Click Generate</li>
+        <li>Copy hooks, CTAs, and hashtags</li>
+      </ol>
+      <span class="subtle">All offline in your browser. No tracking.</span>
+    </div>
+  </div>
+
+  <script>
+    const presets = [
+      { name: 'Creators • Instagram', v: { topic: 'repurposing long‑form into Reels', persona: 'creator', platform: 'instagram', tone: 'bold' } },
+      { name: 'Coaches • LinkedIn', v: { topic: 'high‑ticket webinar funnel outline', persona: 'coach', platform: 'linkedin', tone: 'analytical' } },
+      { name: 'Local • TikTok', v: { topic: 'medspa spring promo ideas', persona: 'local', platform: 'tiktok', tone: 'friendly' } },
+      { name: 'Real Estate • Shorts', v: { topic: 'AI lead magnets for buyers', persona: 'service', platform: 'youtube', tone: 'bold' } },
+      { name: 'Freelancers • X', v: { topic: 'pricing your first retainer', persona: 'freelancer', platform: 'twitter', tone: 'analytical' } },
+    ];
+
+    const platformTemplates = {
+      instagram: [
+        'Stop scrolling: {benefit} in {time}',
+        'POV: {persona} who {pain} — here\'s {num} that works',
+        '{num} {adj} tips for {topic}',
+        'You\'re wasting time on {topic} — do this instead',
+        'Everyone\'s wrong about {topic}: {insight}',
+      ],
+      tiktok: [
+        'Do this before your next post: {benefit}',
+        '{num} hacks to {outcome} (in {time})',
+        'I wish I knew this about {topic}',
+        'Creators ignoring this {adj} {topic} trick',
+        'POV: your {persona} finally {outcome}',
+      ],
+      linkedin: [
+        'Framework: {num}-step path to {outcome}',
+        'Case study: {outcome} in {time} — playbook',
+        'Stop doing {pain}. Try this for {topic}',
+        'Benchmarks for {topic}: what good looks like',
+        'Tactics vs strategy in {topic}: {insight}',
+      ],
+      twitter: [
+        'Unpopular opinion: {topic} is about {insight}',
+        '{num} lessons after {time}: {outcome}',
+        'Threads that actually convert on {topic}',
+        'You\'re 1 tweak away from {benefit}',
+        'Steal this: {adj} template for {topic}',
+      ],
+      youtube: [
+        'Before you post: {num} checks to {outcome}',
+        'This simple change 10x\'d {outcome}',
+        'Beginners make this {topic} mistake',
+        'From zero to {outcome} in {time}',
+        'Copy this {adj} {topic} workflow',
+      ],
+    };
+
+    const adjectives = ['simple','proven','fast','repeatable','scalable','low‑effort'];
+    const times = ['7 days','14 days','30 days','this week'];
+    const numbers = [3,5,7,9,10];
+
+    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function toTitle(s){ return s.replace(/\b\w/g, c => c.toUpperCase()); }
+
+    function derive(topic, persona){
+      const base = topic.toLowerCase();
+      return {
+        benefit: `get results with ${base}`,
+        pain: `struggles with ${base}`,
+        outcome: `win at ${base}`,
+        insight: `it\'s about outcomes, not hacks`,
+        persona: persona,
+        topic: base,
+        adj: pick(adjectives),
+        time: pick(times),
+        num: pick(numbers),
+      };
+    }
+
+    function fillTemplate(tpl, vars){
+      return tpl.replace(/\{(\w+)\}/g, (_,k) => vars[k] ?? '');
+    }
+
+    function uniq(list){ return Array.from(new Set(list.filter(Boolean))); }
+
+    function generateHooks(topic, persona, platform, tone){
+      const tpls = platformTemplates[platform] || platformTemplates.instagram;
+      const hooks = [];
+      for(let i=0;i<tpls.length*2 && hooks.length<10;i++){
+        const vars = derive(topic, persona);
+        if(tone==='analytical') vars.insight = 'measure what matters, iterate weekly';
+        if(tone==='friendly') vars.insight = 'keep it human, keep it helpful';
+        hooks.push(fillTemplate(pick(tpls), vars));
+      }
+      return uniq(hooks).slice(0,10);
+    }
+
+    function generateCTAs(platform){
+      const map = {
+        instagram: ["Comment 'LINK' for the checklist", "DM 'GUIDE' for templates", 'Free version in bio — grab it'],
+        tiktok: ["Comment 'LINK' to get the file", 'Follow for part 2', 'Free copy in bio'],
+        linkedin: ['Reply LINK for the toolkit', 'Connect + comment GUIDE for the PDF', 'Free resource in my featured'],
+        twitter: ['Reply LINK for the swipe', 'RT + DM GUIDE for the pack', 'Free link in bio'],
+        youtube: ['Comment LINK for the sheet', 'Subscribe + DM GUIDE on IG', 'Free link in description'],
+      };
+      return map[platform] || map.instagram;
+    }
+
+    function slugify(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,20); }
+
+    function generateHashtags(topic, persona, platform){
+      const base = topic.split(/\s+/).map(w=>'#'+slugify(w)).filter(Boolean);
+      const common = ['#marketing','#content','#creator','#growth','#strategy','#tips','#learn','#buildinpublic','#smallbusiness'];
+      const personaTags = {
+        creator: ['#creator','#creatorTips'],
+        coach: ['#coaching','#clientAttraction'],
+        service: ['#agency','#serviceBusiness'],
+        freelancer: ['#freelancer','#solopreneur'],
+        local: ['#localseo','#localbusiness'],
+      }[persona] || [];
+      const platformTags = {
+        instagram: ['#reels','#instagramtips'],
+        tiktok: ['#tiktoktips','#fyp'],
+        linkedin: ['#linkedinTips','#b2b'],
+        twitter: ['#TwitterTips','#audience'],
+        youtube: ['#shorts','#youtubetips'],
+      }[platform] || [];
+      return uniq([...base, ...personaTags, ...platformTags, ...common]).slice(0,15);
+    }
+
+    function renderList(items){ return items.map((x,i)=>`${i+1}. ${x}`).join('\n'); }
+
+    function generateAll(){
+      const topic = document.getElementById('topic').value.trim();
+      const persona = document.getElementById('persona').value;
+      const platform = document.getElementById('platform').value;
+      const tone = document.getElementById('tone').value;
+      if(!topic){ alert('Enter a topic'); return; }
+      const hooks = generateHooks(topic, persona, platform, tone);
+      const ctas = generateCTAs(platform);
+      const tags = generateHashtags(topic, persona, platform);
+      document.getElementById('hooks').textContent = renderList(hooks);
+      document.getElementById('ctas').textContent = renderList(ctas);
+      document.getElementById('hashtags').textContent = tags.join(' ');
+      return { hooks, ctas, tags };
+    }
+
+    function copySel(id){
+      const txt = document.getElementById(id).textContent.trim();
+      if(!txt || txt==='—') return;
+      navigator.clipboard.writeText(txt);
+    }
+
+    function copyAll(){
+      const h = document.getElementById('hooks').textContent.trim();
+      const c = document.getElementById('ctas').textContent.trim();
+      const t = document.getElementById('hashtags').textContent.trim();
+      const blob = `HOOKS\n${h}\n\nCTAS\n${c}\n\nHASHTAGS\n${t}\n`;
+      navigator.clipboard.writeText(blob);
+    }
+
+    function downloadTxt(){
+      const h = document.getElementById('hooks').textContent.trim();
+      const c = document.getElementById('ctas').textContent.trim();
+      const t = document.getElementById('hashtags').textContent.trim();
+      const blob = new Blob([`HOOKS\n${h}\n\nCTAS\n${c}\n\nHASHTAGS\n${t}\n`], {type:'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'social-hooks-ctas.txt';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function resetAll(){
+      document.getElementById('topic').value = '';
+      document.getElementById('persona').value = 'creator';
+      document.getElementById('platform').value = 'instagram';
+      document.getElementById('tone').value = 'bold';
+      document.getElementById('hooks').textContent = '—';
+      document.getElementById('ctas').textContent = '—';
+      document.getElementById('hashtags').textContent = '—';
+    }
+
+    function hydrate(){
+      // presets
+      const list = document.getElementById('presetList');
+      presets.forEach(p => {
+        const b = document.createElement('button');
+        b.className = 'pill'; b.textContent = p.name; b.type = 'button';
+        b.addEventListener('click', () => {
+          document.getElementById('topic').value = p.v.topic;
+          document.getElementById('persona').value = p.v.persona;
+          document.getElementById('platform').value = p.v.platform;
+          document.getElementById('tone').value = p.v.tone;
+        });
+        list.appendChild(b);
+      });
+
+      document.getElementById('genBtn').addEventListener('click', generateAll);
+      document.getElementById('copyAllBtn').addEventListener('click', copyAll);
+      document.getElementById('downloadBtn').addEventListener('click', downloadTxt);
+      document.getElementById('resetBtn').addEventListener('click', resetAll);
+      document.getElementById('copyHooks').addEventListener('click', () => copySel('hooks'));
+      document.getElementById('copyCtas').addEventListener('click', () => copySel('ctas'));
+      document.getElementById('copyTags').addEventListener('click', () => copySel('hashtags'));
+
+      // defaults
+      document.getElementById('topic').value = 'AI content batching for real estate';
+      document.getElementById('persona').value = 'service';
+      document.getElementById('platform').value = 'instagram';
+      document.getElementById('tone').value = 'bold';
+      generateAll();
+
+      // replace links
+      document.getElementById('tallyLink').href = 'https://tally.so/r/your-form-id';
+      document.getElementById('gumroadLink').href = 'https://gumroad.com/l/your-product-id';
+    }
+
+    document.addEventListener('DOMContentLoaded', hydrate);
+  </script>
+</body>
+</html>
